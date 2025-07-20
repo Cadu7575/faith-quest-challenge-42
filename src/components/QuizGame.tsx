@@ -11,7 +11,7 @@ interface Avatar {
 }
 
 interface Question {
-  id: number;
+  id: string | number;
   question: string;
   options: string[];
   correctAnswer: number;

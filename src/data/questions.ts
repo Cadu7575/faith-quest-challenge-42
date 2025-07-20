@@ -30,7 +30,7 @@ export const getQuestionsForPhase = async (phase: number): Promise<Question[]> =
     
     // Converter formato do Supabase para o formato esperado
     const questions: Question[] = data.map(q => ({
-      id: parseInt(q.id) || 0, // Se não conseguir converter, usar 0
+      id: q.id, // Manter como UUID string
       question: q.question,
       options: q.options,
       correctAnswer: q.correct_answer,
@@ -112,7 +112,7 @@ export const getAllQuestions = async (): Promise<Question[]> => {
     if (!data) return [];
     
     return data.map(q => ({
-      id: parseInt(q.id) || 0,
+      id: q.id, // Manter como UUID string
       question: q.question,
       options: q.options,
       correctAnswer: q.correct_answer,

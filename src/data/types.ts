@@ -1,6 +1,6 @@
 
 export interface Question {
-  id: number;
+  id: string | number; // Aceitar tanto UUID string quanto number
   question: string;
   options: string[];
   correctAnswer: number;
