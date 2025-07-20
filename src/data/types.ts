@@ -6,6 +6,7 @@ export interface Question {
   correctAnswer: number;
   explanation: string;
   difficulty: 'Fácil' | 'Médio' | 'Difícil';
+  category?: string;
 }
 
 export interface QuestionStats {

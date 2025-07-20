@@ -79,19 +79,19 @@ const QuizGame = ({ avatar, initialProgress, onProgressUpdate, onViewLeaderboard
     updateProgress();
   }, [updateProgress]);
 
-  const loadQuestions = useCallback((phase: number) => {
+  const loadQuestions = useCallback(async (phase: number) => {
     console.log(`=== CARREGANDO 10 PERGUNTAS PARA FASE ${phase} ===`);
-    
-    // Mostrar estatísticas antes de carregar
-    const stats = getQuestionStats();
-    console.log(`📊 ESTATÍSTICAS: ${stats.usedQuestions}/${stats.totalQuestions} usadas, ${stats.remainingQuestions} restantes`);
-    console.log(`🔑 Sessão: ${stats.sessionId}`);
     
     setLoading(true);
     
     try {
-      // Obter 10 perguntas específicas para esta fase
-      const phaseQuestions = getQuestionsForPhase(phase);
+      // Mostrar estatísticas antes de carregar
+      const stats = await getQuestionStats();
+      console.log(`📊 ESTATÍSTICAS: ${stats.usedQuestions}/${stats.totalQuestions} usadas, ${stats.remainingQuestions} restantes`);
+      console.log(`🔑 Sessão: ${stats.sessionId}`);
+      
+      // Obter 10 perguntas específicas para esta fase do Supabase
+      const phaseQuestions = await getQuestionsForPhase(phase);
       
       if (phaseQuestions.length > 0) {
         // Verificar se não há IDs duplicados
@@ -108,16 +108,16 @@ const QuizGame = ({ avatar, initialProgress, onProgressUpdate, onViewLeaderboard
         console.log(`✅ ${phaseQuestions.length} perguntas carregadas com sucesso para a fase ${phase}`);
         console.log(`📝 IDs das perguntas: [${ids.join(', ')}]`);
         
-        toast.success(`10 perguntas únicas carregadas para a fase ${phase}!`, {
+        toast.success(`10 perguntas únicas carregadas do Supabase para a fase ${phase}!`, {
           duration: 2000
         });
       } else {
-        throw new Error('Nenhuma pergunta foi carregada');
+        throw new Error('Nenhuma pergunta foi carregada do Supabase');
       }
       
     } catch (error) {
-      console.error('❌ ERRO ao carregar perguntas:', error);
-      toast.error('Erro ao carregar perguntas.', {
+      console.error('❌ ERRO ao carregar perguntas do Supabase:', error);
+      toast.error('Erro ao carregar perguntas do banco de dados.', {
         duration: 2000
       });
     } finally {
@@ -202,8 +202,9 @@ const QuizGame = ({ avatar, initialProgress, onProgressUpdate, onViewLeaderboard
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-purple-900 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
-          <p className="text-white">Carregando 10 perguntas únicas da fase {currentPhase}...</p>
-          <p className="text-blue-300 text-sm mt-2">Sistema anti-repetição ativo!</p>
+          <p className="text-white">Carregando 10 perguntas reais da fase {currentPhase}...</p>
+          <p className="text-blue-300 text-sm mt-2">Buscando no banco de dados Supabase!</p>
+          <p className="text-green-300 text-xs mt-1">✅ 1000 perguntas únicas disponíveis</p>
         </div>
       </div>
     );
